@@ -8,7 +8,7 @@ def signup_view(request):
     if request.method == "POST":
         form = UserCreationForm(request.POST)
         if form.is_valid():
-            # if valid, we can same data to db
+            # if valid, we get same data to db
             user = form.save()
 
             login(request, user)

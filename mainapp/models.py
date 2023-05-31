@@ -4,11 +4,11 @@ from django.shortcuts import reverse
 # Create your models here.
 
 CATEGORY_CHOICES = (
-    ("F", "Garden"),
-    ("S", "Varia"),
-    ("M", "Home"),
-    ("T", "Car"),
-    ("R", "18+"),
+    ("G", "Garden"),
+    ("V", "Varia"),
+    ("H", "Home"),
+    ("C", "Car"),
+    ("18", "18+"),
 )
 
 
