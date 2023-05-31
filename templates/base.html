@@ -31,6 +31,23 @@
                                 <li><a class="dropdown-item" href="#!">New Arrivals</a></li>
                             </ul>
                         </li>
+
+                        {% if user.is_authenticated %}
+                            <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                {{ user.get_username }}
+                            </a>
+                            <ul class="dropdown-menu">
+                                <li><a class="dropdown-item" href="#">Profile</a></li>
+                                <li><hr class="dropdown-divider"></li>
+                                <li><a class="dropdown-item" href="{% url 'accounts:logout' %}">Log out</a></li>
+                            </ul>
+                            </li>
+                        {% else %}
+                            <li class="nav-item"><a class="nav-link active" href="{% url 'accounts:login' %}">Sign in</a></li>
+                        {% endif %}
+
+
                     </ul>
                     <form class="d-flex">
                         <button class="btn btn-outline-dark" type="submit">
