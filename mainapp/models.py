@@ -4,18 +4,18 @@ from django.shortcuts import reverse
 # Create your models here.
 
 CATEGORY_CHOICES = (
-    ("F", "Garden"),
-    ("S", "Varia"),
-    ("M", "Home"),
-    ("T", "Car"),
-    ("R", "18+"),
+    ("G", "Garden"),
+    ("V", "Varia"),
+    ("H", "Home"),
+    ("C", "Car"),
+    ("18", "18+"),
 )
 
 
 class Item(models.Model):
     title = models.CharField(max_length=100)
     price = models.FloatField()
-    discount_price = models.FloatField(blank=True)
+    discount_price = models.FloatField(blank=True, null=True)
     category = models.CharField(choices=CATEGORY_CHOICES, max_length=5)
     slug = models.SlugField()
     description = models.TextField()
