@@ -29,7 +29,7 @@ class Item(models.Model):
         return discount_percent
 
     def get_item_url(self):
-        return reverse('mainapp:detail', kwargs={
+        return reverse('templates:product', kwargs={
             'slug': self.slug
         })
 
