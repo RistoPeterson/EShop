@@ -1,6 +1,7 @@
+from django.contrib.auth.models import User
 from django.db import models
 from django.shortcuts import reverse
-from frontend import settings
+
 
 # Create your models here.
 
@@ -36,7 +37,7 @@ class Item(models.Model):
 
 
 class OrderItem(models.Model):
-    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
     ordered = models.BooleanField(default=False)
     item = models.ForeignKey(Item, on_delete=models.CASCADE)
     quantity = models.IntegerField(default=1)
@@ -46,13 +47,13 @@ class OrderItem(models.Model):
 
 
 class Order(models.Model):
-    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
     order_ref = models.CharField(max_length=20)
     items = models.ManyToManyField(OrderItem)
     ordered_date = models.DateTimeField()
     ordered = models.BooleanField(default=False)
     billing_address = models.ForeignKey('BillingAddress', on_delete=models.SET_NULL, blank=True, null=True)
-    coupon = models.ForeignKey('BillingAddress', on_delete=models.SET_NULL, blank=True, null=True)
+    coupon = models.ForeignKey('Coupon', on_delete=models.SET_NULL, blank=True, null=True)
     payment = models.ForeignKey('Payment', on_delete=models.SET_NULL, blank=True, null=True)
     delivered = models.BooleanField(default=False)
     received = models.BooleanField(default=False)
@@ -60,18 +61,17 @@ class Order(models.Model):
     refund_granted = models.BooleanField(default=False)
 
     def __str__(self):
-        return self.user.username
+        return self.user.name
 
 
 class BillingAddress(models.Model):
-    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
     street_name = models.CharField(max_length=100)
-    flat_number = models.IntegerField(max_length=5)
-    country = models.CountryField(max_length=100)
+    flat_number = models.CharField(max_length=5)
     zip = models.CharField(max_length=10)
 
     def __str__(self):
-        return self.user.username
+        return self.user.name
 
 
 class Coupon(models.Model):
@@ -84,12 +84,12 @@ class Coupon(models.Model):
 
 class Payment(models.Model):
     stripe_charge_id = models.CharField(max_length=100)
-    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
     amount = models.FloatField()
     timestamp = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
-        return self.user.username
+        return self.user.name
 
 
 class Refund(models.Model):
