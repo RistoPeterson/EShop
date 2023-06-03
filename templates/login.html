@@ -5,10 +5,11 @@
 
 {% block content %}
 
-{% csrf_token %}
+
 <br>
 <div class="container">
     <form method="post">
+        {% csrf_token %}
         {{signin_form}}
         <button class="btn btn-info" type="submit">Log in</button>
          <a href="{% url 'accounts:signup' %}" class="btn btn-info">Register</a>
