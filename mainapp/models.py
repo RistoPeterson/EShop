@@ -1,7 +1,6 @@
 from django.db import models
 from django.shortcuts import reverse
 from frontend import settings
-from django_countries.fields import CountryField
 
 # Create your models here.
 
