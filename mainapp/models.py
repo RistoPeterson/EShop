@@ -3,7 +3,6 @@ from django.db import models
 from django.shortcuts import reverse
 from django_countries.fields import CountryField
 
-
 # Create your models here.
 
 CATEGORY_CHOICES = (
@@ -36,6 +35,11 @@ class Item(models.Model):
             'slug': self.slug
         })
 
+    def get_add_to_cart(self):
+        return reverse('mainapp:add-to-cart', kwargs={
+            'slug': self.slug
+        })
+
 
 class OrderItem(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
@@ -62,7 +66,7 @@ class Order(models.Model):
     refund_granted = models.BooleanField(default=False)
 
     def __str__(self):
-        return self.user.name
+        return self.user.username
 
 
 class BillingAddress(models.Model):
@@ -73,7 +77,7 @@ class BillingAddress(models.Model):
     zip = models.CharField(max_length=10)
 
     def __str__(self):
-        return self.user.name
+        return self.user.username
 
 
 class Coupon(models.Model):
@@ -91,7 +95,7 @@ class Payment(models.Model):
     timestamp = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
-        return self.user.name
+        return self.user.username
 
 
 class Refund(models.Model):
