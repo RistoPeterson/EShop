@@ -5,7 +5,8 @@
 {% block content %}
 <!-- Section-->
 <section class="py-5">
-    <div class="container px-4 px-lg-5 mt-5">
+    <div class="container table-responsive">
+        <h4>Orders summary</h4>
             <table class="table">
                   <thead>
                     <tr>
@@ -17,14 +18,26 @@
                     </tr>
                   </thead>
                 <tbody>
-                <tbody>
+                <!-- Get info views.py and models.py -->
+                {% for order_item in object.items.all %}
                         <tr>
-                          <th scope="row">1</th>
-                          <td>Munn</td>
-                          <td>5€</td>
-                          <td>2</td>
-                          <td>10€</td>
+                          <th scope="row">{{ forloop.counter }}</th>
+                          <td>{{ order_item.item.title }}</td>
+
+                          {% if order_item.item.discount_price %}
+                            <td>{{ order_item.item.discount_price }}€</td>
+                            {% else %}
+                            <td>{{ order_item.item.price }}€</td>
+                            {% endif %}
+
+                          <td>{{ order_item.quantity }}</td>
+                            {% if order_item.item.discount_price %}
+                            <td>{{ order_item.total_item_discount_price }}€</td>
+                            {% else %}
+                            <td>{{ order_item.total_item_price }}€</td>
+                            {% endif %}
                         </tr>
+                {% endfor %}
                 </tbody>
             </table>
                <div class="card-footer p-4 pt-0 border-top-0 bg-transparent">
