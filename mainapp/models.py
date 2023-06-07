@@ -27,8 +27,10 @@ class Item(models.Model):
         return self.title
 
     def get_discount_percent(self):
-        discount_percent = 100 - (self.discount_price * 100 / self.price)
-        return discount_percent
+        if self.discount_price is not None and self.price is not None and self.price != 0:
+            discount_percent = 100 - (self.discount_price * 100 / self.price)
+            return discount_percent
+        return 0  # or any other fallback value
 
     def get_item_url(self):
         return reverse('mainapp:product', kwargs={
