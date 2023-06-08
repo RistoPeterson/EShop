@@ -30,20 +30,36 @@
                             <td>{{ order_item.item.price }}€</td>
                             {% endif %}
 
-                          <td>{{ order_item.quantity }}</td>
+                          <td>
+                              <a href="{% url 'mainapp:add-to-cart' order_item.item.slug %}"><i class="bi bi-dash-circle-fill mr-2"></i></a>
+                              {{ order_item.quantity }}
+                              <a href="{% url 'mainapp:add-to-cart' order_item.item.slug %}"><i class="bi bi-plus-circle-fill"></i></a>
+                          </td>
                             {% if order_item.item.discount_price %}
-                            <td>{{ order_item.total_item_discount_price }}€</td>
+                            <td>{{ order_item.total_item_discount_price }}€
+                            <span class="badge rounded-pill bg-danger">Saving: -{{ order_item.amount_saved }}€</span>
+                            </td>
                             {% else %}
                             <td>{{ order_item.total_item_price }}€</td>
                             {% endif %}
                         </tr>
                 {% endfor %}
+
+                {% if object.total_price %}
+
+                <tr>
+                    <td colspan="4"><b>Order total</b></td>
+                    <td><b>{{ object.total_price }}€</b></td>
+                </tr>
+
+                {% endif %}
+
                 </tbody>
             </table>
                <div class="card-footer p-4 pt-0 border-top-0 bg-transparent">
                     <div class="text-center mt-5">
                         <a class="btn btn-outline-dark mt-auto me-4" href="{% url 'mainapp:index' %}">Continue Shopping</a>
-                        <a class="btn btn-outline-dark mt-auto me-4" href="#">Go to cart</a>
+                        <a class="btn btn-outline-dark mt-auto me-4" href="#">Proceed checkout</a>
                     </div>
                 </div>
 
