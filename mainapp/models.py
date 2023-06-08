@@ -83,6 +83,12 @@ class Order(models.Model):
     def __str__(self):
         return self.user.username
 
+    def total_price(self):
+        total = 0
+        for order_item in self.items.all():
+            total += order_item.final_price()
+        return total
+
 
 class BillingAddress(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
