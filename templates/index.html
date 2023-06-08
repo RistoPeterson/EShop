@@ -25,8 +25,12 @@
                             {% else %}
                             <p>{{ item.price }}€</p>
                             {% endif %}
-
-                            <span class="badge rounded-pill bg-danger">{{ item.get_discount_percent|floatformat:2 }}%</span>
+                            <!-- Product discount-->
+                            <span class="badge rounded-pill bg-danger">
+                                {% if item.get_discount_percent > 0 %}
+                                    {{ item.get_discount_percent|floatformat:2 }}%
+                                {% endif %}
+                            </span>
                             <p class="btn btn-success btn-sm">{{ item.get_category_display }}</p>
                         </div>
                     </div>
