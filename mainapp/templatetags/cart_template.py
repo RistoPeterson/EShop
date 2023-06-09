@@ -1,5 +1,5 @@
-"""from django import template
-from EShop.mainapp.models import Order
+from django import template
+from mainapp.models import Order
 
 register = template.Library()
 
@@ -11,4 +11,3 @@ def cart_count(user):
         if query_set.exists():
             return query_set[0].items.count()
         return 0
-"""
