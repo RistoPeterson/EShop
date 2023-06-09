@@ -80,6 +80,13 @@ def remove_single_item(request, slug):
         return redirect("mainapp:detail", slug=slug)
 
 
+@login_required(login_url='../accounts/login')
+def remove_from_cart(request, slug):
+    order_item = OrderItem.objects.get(item__slug=slug, user=request.user, ordered=False)
+    order_item.delete()
+    return redirect('mainapp:summary')
+
+
 class OrderSummary(LoginRequiredMixin, View):
     def get(self, *args, **kwargs):
         try:

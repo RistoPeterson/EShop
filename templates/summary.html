@@ -42,6 +42,10 @@
                             {% else %}
                             <td>{{ order_item.total_item_price }}€</td>
                             {% endif %}
+                          <td>
+                            <a href="{% url 'mainapp:remove-from-cart' order_item.item.slug %}"><i class="bi bi-trash"></i>
+                            </a>
+                          <td>
                         </tr>
                 {% endfor %}
 
