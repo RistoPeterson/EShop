@@ -20,6 +20,7 @@ class ProductDetailView(DetailView):
     template_name = 'product.html'
 
 
+""" Add 1 item if clicked '+' icon """
 @login_required(login_url='../accounts/login')
 def add_to_cart(request, slug):
     item = get_object_or_404(Item, slug=slug)
@@ -43,7 +44,6 @@ def add_to_cart(request, slug):
             messages.info(request, "Item is successfully added to cart")
             order.items.add(order_item)
             return redirect("mainapp:summary")
-
     else:
         ordered_date = timezone.now()
         order = Order.objects.create(user=request.user, ordered_date=ordered_date)
@@ -52,6 +52,7 @@ def add_to_cart(request, slug):
         return redirect("mainapp:summary")
 
 
+"""Remove 1 item if clicked '-' icon"""
 @login_required(login_url='../accounts/login')
 def remove_single_item(request, slug):
     item = get_object_or_404(Item, slug=slug)
@@ -80,6 +81,7 @@ def remove_single_item(request, slug):
         return redirect("mainapp:detail", slug=slug)
 
 
+""" Trash icon function """
 @login_required(login_url='../accounts/login')
 def remove_from_cart(request, slug):
     order_item = OrderItem.objects.get(item__slug=slug, user=request.user, ordered=False)
