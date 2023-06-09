@@ -31,7 +31,7 @@
                             {% endif %}
 
                           <td>
-                              <a href="{% url 'mainapp:add-to-cart' order_item.item.slug %}"><i class="bi bi-dash-circle-fill mr-2"></i></a>
+                              <a href="{% url 'mainapp:remove-single-item' order_item.item.slug %}"><i class="bi bi-dash-circle-fill mr-2"></i></a>
                               {{ order_item.quantity }}
                               <a href="{% url 'mainapp:add-to-cart' order_item.item.slug %}"><i class="bi bi-plus-circle-fill"></i></a>
                           </td>

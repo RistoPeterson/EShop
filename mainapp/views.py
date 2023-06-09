@@ -52,6 +52,34 @@ def add_to_cart(request, slug):
         return redirect("mainapp:summary")
 
 
+@login_required(login_url='../accounts/login')
+def remove_single_item(request, slug):
+    item = get_object_or_404(Item, slug=slug)
+
+    order_q = Order.objects.filter(user=request.user, ordered=False)
+
+    if order_q.exists():
+        order = order_q[0]
+
+        if order.items.filter(item__slug=item.slug).exists():
+            order_item = OrderItem.objects.filter(item=item, user=request.user, ordered=False)[0]
+            if order_item.quantity > 1:
+                order_item.quantity -= 1
+                order_item.save()
+            else:
+                order.items.remove(order_item)
+
+            messages.info(request, "Item is removed from cart")
+            return redirect("mainapp:summary")
+        else:
+            messages.info(request, "Item was not in your cart")
+            return redirect("mainapp:detail", slug=slug)
+
+    else:
+        messages.info(request, "You dont have an active order")
+        return redirect("mainapp:detail", slug=slug)
+
+
 class OrderSummary(LoginRequiredMixin, View):
     def get(self, *args, **kwargs):
         try:
@@ -63,4 +91,4 @@ class OrderSummary(LoginRequiredMixin, View):
         except ObjectDoesNotExist:
             messages.warning(self.request, "You don't have any item in the cart")
             return redirect('/')
-        return render(self.request, 'summary.html', context)
+        return render(self.request, 'summary.html')
