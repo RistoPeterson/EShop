@@ -11,7 +11,7 @@ from django.views.generic import View, DetailView, ListView
 
 class IndexView(ListView):
     model = Item
-    paginate_by = 10
+    paginate_by = 6
     template_name = 'index.html'
 
 
@@ -20,7 +20,7 @@ class ProductDetailView(DetailView):
     template_name = 'product.html'
 
 
-@login_required(login_url='../accounts/login')
+@login_required
 def add_to_cart(request, slug):
     item = get_object_or_404(Item, slug=slug)
     order_item, created = OrderItem.objects.get_or_create(
