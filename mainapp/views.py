@@ -82,7 +82,7 @@ def remove_single_item(request, slug):
 
 
 """ Trash icon function """
-@login_required(login_url='../accounts/login')
+@login_required
 def remove_from_cart(request, slug):
     order_item = OrderItem.objects.get(item__slug=slug, user=request.user, ordered=False)
     order_item.delete()
