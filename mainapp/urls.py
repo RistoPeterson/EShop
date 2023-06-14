@@ -11,5 +11,6 @@ urlpatterns = [
     path('remove-from-cart/<slug:slug>/', views.remove_from_cart, name='remove-from-cart'),
     path('summary/', views.OrderSummary.as_view(), name='summary'),
     path('shipping-address/', views.ShippingAddressView.as_view(), name='shipping'),
+    path('about/', views.About, name='about'),
 
 ]
