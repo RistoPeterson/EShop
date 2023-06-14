@@ -94,9 +94,9 @@ class Order(models.Model):
 
 class BillingAddress(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
-    street_name = models.CharField(max_length=100)
+    street_address = models.CharField(max_length=100)
+    apartment = models.CharField(max_length=5)
     country = CountryField(blank_label="(select country)", null=True)
-    flat_number = models.CharField(max_length=5)
     zip = models.CharField(max_length=10)
 
     def __str__(self):
