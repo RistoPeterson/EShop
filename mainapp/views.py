@@ -152,3 +152,7 @@ class ShippingAddressView(View):
         except ObjectDoesNotExist:
             messages.info(self.request, 'You do not have an active order.')
             return redirect('mainapp:summary')
+
+
+def About(request):
+    return render(request, "about.html")
