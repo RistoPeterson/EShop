@@ -5,6 +5,8 @@ from django.core.exceptions import ObjectDoesNotExist
 from django.shortcuts import render, get_object_or_404, redirect
 from django.utils import timezone
 
+from .forms import ShippingAddressForm
+
 from .models import Item, OrderItem, Order
 from django.views.generic import View, DetailView, ListView
 
@@ -21,6 +23,8 @@ class ProductDetailView(DetailView):
 
 
 """ Add 1 item if clicked '+' icon """
+
+
 @login_required
 def add_to_cart(request, slug):
     item = get_object_or_404(Item, slug=slug)
@@ -53,6 +57,8 @@ def add_to_cart(request, slug):
 
 
 """Remove 1 item if clicked '-' icon"""
+
+
 @login_required
 def remove_single_item(request, slug):
     item = get_object_or_404(Item, slug=slug)
@@ -82,6 +88,8 @@ def remove_single_item(request, slug):
 
 
 """ Trash icon function """
+
+
 @login_required
 def remove_from_cart(request, slug):
     order_item = OrderItem.objects.get(item__slug=slug, user=request.user, ordered=False)
@@ -101,3 +109,19 @@ class OrderSummary(LoginRequiredMixin, View):
             messages.warning(self.request, "You don't have any item in the cart")
             return redirect('/')
         return render(self.request, 'summary.html')
+
+
+class ShippingAddressView(View):
+    def get(self, *args, **kwargs):
+        try:
+            order = Order.objects.get(user=self.request.user, ordered=False)
+            form = ShippingAddressForm()
+            context = {
+                'form': form,
+                'order': order
+            }
+            return render(self.request, 'shipping_address.html', context)
+        except ObjectDoesNotExist:
+            messages.warning(self.request, 'You do not have an active order.')
+            return redirect('frontend:summary')
+
