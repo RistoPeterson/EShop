@@ -57,7 +57,13 @@
                         <a class="btn btn-outline-dark" href="{% url 'mainapp:summary' %}" type="submit">
                             <i class="bi-cart-fill me-1"></i>
                             Cart
-                            <span class="badge bg-dark text-white ms-1 rounded-pill">{{ user|cart_count }}</span>
+                            <span class="badge bg-dark text-white ms-1 rounded-pill">
+                                {% if user.is_authenticated %}
+                                    {{ user|cart_count }}
+                                {% else %}
+                                    0
+                                {% endif %}
+                            </span>
                         </a>
                     </form>
                 </div>

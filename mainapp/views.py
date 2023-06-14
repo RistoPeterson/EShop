@@ -13,7 +13,7 @@ from django.views.generic import View, DetailView, ListView
 
 class IndexView(ListView):
     model = Item
-    paginate_by = 10
+    paginate_by = 8
     template_name = 'index.html'
 
 
@@ -26,6 +26,7 @@ class ProductDetailView(DetailView):
 
 
 @login_required(login_url='../accounts/login')
+@login_required
 def add_to_cart(request, slug):
     item = get_object_or_404(Item, slug=slug)
     order_item, created = OrderItem.objects.get_or_create(
@@ -60,6 +61,7 @@ def add_to_cart(request, slug):
 
 
 @login_required(login_url='../accounts/login')
+@login_required
 def remove_single_item(request, slug):
     item = get_object_or_404(Item, slug=slug)
 
@@ -91,6 +93,7 @@ def remove_single_item(request, slug):
 
 
 @login_required(login_url='../accounts/login')
+@login_required
 def remove_from_cart(request, slug):
     order_item = OrderItem.objects.get(item__slug=slug, user=request.user, ordered=False)
     order_item.delete()
@@ -117,12 +120,10 @@ class ShippingAddressView(View):
             order = Order.objects.get(user=self.request.user, ordered=False)
             form = ShippingAddressForm()
             context = {
-                'form':form,
-                'order':order,
+                'form': form,
+                'order': order,
             }
             return render(self.request, 'shipping_address.html', context)
         except ObjectDoesNotExist:
             messages.info(self.request, 'You do not have active order.')
             return redirect('frontend:summary')
-
-
