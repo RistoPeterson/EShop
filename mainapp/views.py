@@ -7,7 +7,7 @@ from django.utils import timezone
 
 from .forms import ShippingAddressForm
 
-from .models import Item, OrderItem, Order
+from .models import Item, OrderItem, Order, BillingAddress
 from django.views.generic import View, DetailView, ListView
 
 
@@ -125,3 +125,30 @@ class ShippingAddressView(View):
             messages.warning(self.request, 'You do not have an active order.')
             return redirect('frontend:summary')
 
+    def post(self, *args, **kwargs):
+        form = ShippingAddressForm(self.request.POST or None)
+        try:
+            order = Order.objects.get(user=self.request.user, ordered=False)
+            if form.is_valid():
+                street_address = form.cleaned_data.get('street_address')
+                apartment_address = form.cleaned_data.get('apartment_address')
+                country = form.cleaned_data.get('country')
+                zip_code = form.cleaned_data.get('zip_code')
+
+                billing_address = BillingAddress(
+                    user=self.request.user,
+                    street_address=street_address,
+                    apartment=apartment_address,
+                    country=country,
+                    zip=zip_code,
+                )
+
+                billing_address.save()
+                order.billing_address = billing_address
+                order.save()
+
+                messages.info(self.request, 'Address added to order.')
+                return redirect('mainapp:summary')
+        except ObjectDoesNotExist:
+            messages.info(self.request, 'You do not have an active order.')
+            return redirect('mainapp:summary')
