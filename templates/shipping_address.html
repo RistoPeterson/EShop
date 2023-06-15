@@ -9,6 +9,12 @@
 
         <h4 class="mb-3">Shipping address</h4>
 
+        {% if order.billing_address %}
+        <p>You have already added the address! <i><b>{{ order.billing_address.street_address }}</b></i>, do you want to change?</p>
+            <a href="" class="btn btn-warning">Change address</a>
+            <a href="" class="btn btn-info">Proceed to checkout</a>
+        {% else %}
+
         <form action="" method="post" autocomplete="off" class="container">
             {% csrf_token %}
                 <div class="form-floating mb-3">
@@ -34,6 +40,7 @@
                     </div>
                 </div>
         </form>
+        {% endif %}
     </div>
  </section>
 {% endblock %}
