@@ -1,46 +1,51 @@
 {% extends 'base.html' %}
 
-{% block title %} Print3DStuff | Shipping {% endblock title %}
+{% block title %}Print3DStuff | Shipping{% endblock title %}
 
 {% block content %}
-<!-- Section-->
 <section class="py-5">
-    <div class="container table-responsive" style="max-width: 500px;">
-
+  <div class="container">
+    <div class="row">
+      <div class="col-md-8">
         <h4 class="mb-3">Shipping address</h4>
 
         {% if order.billing_address %}
         <p>You have already added the address! <i><b>{{ order.billing_address.street_address }}</b></i>, do you want to change?</p>
-            <a href="" class="btn btn-warning">Change address</a>
-            <a href="" class="btn btn-info">Proceed to checkout</a>
+        <a href="" class="btn btn-warning">Change address</a>
+        <a href="" class="btn btn-info">Proceed to checkout</a>
         {% else %}
 
         <form action="" method="post" autocomplete="off" class="container">
-            {% csrf_token %}
-                <div class="form-floating mb-3">
-                    {{ form.street_address }}
-                    <label for="floatingInput">Street name and house number</label>
-                </div>
-                <div class="form-floating mb-3">
-                    {{ form.apartment_address }}
-                    <label for="floatingApartment">Apartment</label>
-                </div>
-                <div class="form-floating mb-3">
-                    {{ form.country }}
-                    <div class="invalid-feedback">Please select valid country</div>
-                    <label for="floatingSelect">Country</label>
-                </div>
-                <div class="form-floating mb-3">
-                    {{ form.zip_code }}
-                    <label for="floatingZip">Zip Code</label>
-                </div>
-               <div class="card-footer p-4 pt-0 border-top-0 bg-transparent">
-                    <div class="text-center mt-5">
-                        <button class="btn btn-outline-dark mt-auto me-4" type="submit">Continue checkout</button>
-                    </div>
-                </div>
+          {% csrf_token %}
+          <div class="form-floating mb-3">
+            {{ form.street_address }}
+            <label for="floatingInput">Street name and house number</label>
+          </div>
+          <div class="form-floating mb-3">
+            {{ form.apartment_address }}
+            <label for="floatingApartment">Apartment</label>
+          </div>
+          <div class="form-floating mb-3">
+            {{ form.country }}
+            <div class="invalid-feedback">Please select a valid country</div>
+            <label for="floatingSelect">Country</label>
+          </div>
+          <div class="form-floating mb-3">
+            {{ form.zip_code }}
+            <label for="floatingZip">Zip Code</label>
+          </div>
+          <div class="card-footer p-4 pt-0 border-top-0 bg-transparent">
+            <div class="text-center mt-5">
+              <button class="btn btn-outline-dark mt-auto me-4" type="submit">Continue checkout</button>
+            </div>
+          </div>
         </form>
         {% endif %}
+      </div>
+      <div class="col-md-4">
+        {% include 'cart_snippet.html' %}
+      </div>
     </div>
- </section>
+  </div>
+</section>
 {% endblock %}
