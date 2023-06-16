@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Item, Order, OrderItem, Payment, BillingAddress, Refund
+from .models import Item, Order, OrderItem, Payment, BillingAddress, Refund, Coupon
 
 def change_refund_to_granted(modelAdmin, request, queryset):
     queryset.update(refund_granted=True)
@@ -14,6 +14,7 @@ class SnippetOrderAdmin(admin.ModelAdmin):
 
 admin.site.register(Item)
 admin.site.register(Order, SnippetOrderAdmin)
+admin.site.register(Coupon)
 admin.site.register(OrderItem)
 admin.site.register(Payment)
 admin.site.register(BillingAddress)
