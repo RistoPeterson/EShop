@@ -1,91 +1,45 @@
-{% extends 'base.html' %}
+<h4 class="d-flex justify-content-between align-items-center mb-3">
+  <span class="text-muted">Your cart</span>
+  <span class="badge bg-dark text-white ms-1 rounded-pill">{{ order.items.count }}</span>
+</h4>
 
-{% block title %} Print3DStuff | Summary {% endblock title %}
-
-{% block content %}
-<!-- Section-->
-<section class="py-5">
-    <div class="container table-responsive">
-        <h4>Orders summary</h4>
-            <table class="table">
-                  <thead>
-                    <tr>
-                      <th scope="col">#</th>
-                      <th scope="col">Item</th>
-                      <th scope="col">Price</th>
-                      <th scope="col">Quantity</th>
-                      <th scope="col">Total</th>
-                    </tr>
-                  </thead>
-                <tbody>
-                <!-- Get info views.py and models.py -->
-                {% for order_item in object.items.all %}
-                        <tr>
-                          <th scope="row">{{ forloop.counter }}</th>
-                          <td>{{ order_item.item.title }}</td>
-
-                          {% if order_item.item.discount_price %}
-                            <td>{{ order_item.item.discount_price }}€</td>
-                            {% else %}
-                            <td>{{ order_item.item.price }}€</td>
-                            {% endif %}
-
-                          <td>
-                              <a href="{% url 'mainapp:remove-single-item' order_item.item.slug %}"><i class="bi bi-dash-circle-fill mr-2"></i></a>
-                              {{ order_item.quantity }}
-                              <a href="{% url 'mainapp:add-to-cart' order_item.item.slug %}"><i class="bi bi-plus-circle-fill"></i></a>
-                          </td>
-                            {% if order_item.item.discount_price %}
-                            <td>{{ order_item.total_item_discount_price }}€
-                            <span class="badge rounded-pill bg-danger">Saving: -{{ order_item.amount_saved }}€</span>
-                            </td>
-                            {% else %}
-                            <td>{{ order_item.total_item_price }}€</td>
-                            {% endif %}
-                          <td>
-                            <a href="{% url 'mainapp:remove-from-cart' order_item.item.slug %}"><i class="bi bi-trash"></i>
-                            </a>
-                          <td>
-                        </tr>
-                {% endfor %}
-
-
-                {% if order.coupon %}
-                <li class="list-group-item d-flex justify-content-between bg-light">
-                    <div class="text-success">
-                        <h6 class="my-0">Coupon code</h6>
-                        <small>{{ order.coupon.code }}</small>
-                    </div>
-                    <span class="text-success">-€{{ order.coupon.amount }}</span>
-                </li>
-                {% endif %}
-
-
-                {% if object.total_price %}
-                <tr>
-                    <td colspan="4"><b>Order total</b></td>
-                    <td><b>{{ object.total_price }}€</b></td>
-                </tr>
-                {% endif %}
-
-
-                {% if display_coupon_form %}
-                    <form action="" method="post" autocomplete="off" calss="container">
-                        <div class="input-group">
-                            {{  }}
-                        </div>
-                    </form>
-
-
-                </tbody>
-            </table>
-               <div class="card-footer p-4 pt-0 border-top-0 bg-transparent">
-                    <div class="text-center mt-5">
-                        <a class="btn btn-outline-dark mt-auto me-4" href="{% url 'mainapp:index' %}">Continue Shopping</a>
-                        <a class="btn btn-outline-dark mt-auto me-4" href="{% url 'mainapp:shipping' %}">Proceed checkout</a>
-                    </div>
-               </div>
-
+<!-- Cart -->
+<ul class="list-group mb-3 z-depth-1">
+  {% for order_item in order.items.all %}
+  <li class="list-group-item d-flex justify-content-between lh-condensed">
+    <div>
+      <h6 class="my-0">{{ order_item.quantity }} x {{ order_item.item.title }}</h6>
+      <small class="text-muted">{{ order_item.item.snip_description }}</small>
     </div>
- </section>
-{% endblock %}
+    <span class="text-muted">{{ order_item.final_price }}</span>
+  </li>
+  {% endfor %}
+
+  {% if order.coupon %}
+  <li class="list-group-item d-flex justify-content-between bg-light">
+    <div class="text-success">
+      <h6 class="my-0">Coupon code</h6>
+      <small>{{ order.coupon.code }}</small>
+    </div>
+    <span class="text-success">-{{ order.coupon.amount }}€</span>
+  </li>
+  {% endif %}
+
+  <li class="list-group-item d-flex justify-content-between">
+    <span>Total (EUR)</span>
+    <strong>{{ order.total_price }}€</strong>
+  </li>
+</ul>
+
+<!-- Promo code -->
+{% if display_coupon_form %}
+  <form action="{% url 'mainapp:add-coupon' %}" method="post" autocomplete="off" class="container">
+    {% csrf_token %}
+    <div class="input-group">
+      {{ couponform.code }}
+      <div class="input-group-addon">
+        <button class="btn btn-info m-0" type="submit">Redeem</button>
+      </div>
+    </div>
+  </form>
+{% endif %}
