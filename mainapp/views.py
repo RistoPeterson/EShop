@@ -161,12 +161,12 @@ def get_coupon(request, code):
         return coupon
     except ObjectDoesNotExist:
         messages.info(request, "This coupon is not valid")
-        return redirect("mainapp: summary")
+        return redirect("mainapp:summary")
 
 
 class addCouponView(View):
     def post(self, *args, **kwargs):
-        form = CouponForm(self.request.Post or None)
+        form = CouponForm(self.request.POST or None)
         if form.is_valid():
             try:
                 code = form.cleaned_data.get("code")
@@ -174,10 +174,10 @@ class addCouponView(View):
                 order.coupon = get_coupon(self.request, code)
                 order.save()
                 messages.success(self.request, "Coupon added")
-                return redirect("mainapp: summary")
+                return redirect("mainapp:shipping")
             except ObjectDoesNotExist:
                 messages.info(self.request, "You do not have an active order")
-                return redirect("mainapp: summary")
+                return redirect("mainapp:shipping")
 
 
 def About(request):
