@@ -5,9 +5,9 @@ from django.core.exceptions import ObjectDoesNotExist
 from django.shortcuts import render, get_object_or_404, redirect
 from django.utils import timezone
 
-from .forms import ShippingAddressForm
+from .forms import ShippingAddressForm, CouponForm
 
-from .models import Item, OrderItem, Order, BillingAddress
+from .models import Item, OrderItem, Order, BillingAddress, Coupon
 from django.views.generic import View, DetailView, ListView
 
 
@@ -118,12 +118,14 @@ class ShippingAddressView(View):
             form = ShippingAddressForm()
             context = {
                 'form': form,
-                'order': order
+                'order': order,
+                'couponform': CouponForm(),
+                'display_coupon_form': True,
             }
             return render(self.request, 'shipping_address.html', context)
         except ObjectDoesNotExist:
             messages.warning(self.request, 'You do not have an active order.')
-            return redirect('frontend:summary')
+            return redirect('mainapp:summary')
 
     def post(self, *args, **kwargs):
         form = ShippingAddressForm(self.request.POST or None)
@@ -152,6 +154,30 @@ class ShippingAddressView(View):
         except ObjectDoesNotExist:
             messages.info(self.request, 'You do not have an active order.')
             return redirect('mainapp:summary')
+
+def get_coupon(request, code):
+    try:
+        coupon = Coupon.objects.get(code=code)
+        return coupon
+    except ObjectDoesNotExist:
+        messages.info(request, "This coupon is not valid")
+        return redirect("mainapp:summary")
+
+
+class addCouponView(View):
+    def post(self, *args, **kwargs):
+        form = CouponForm(self.request.POST or None)
+        if form.is_valid():
+            try:
+                code = form.cleaned_data.get("code")
+                order = Order.objects.get(user=self.request.user, ordered=False)
+                order.coupon = get_coupon(self.request, code)
+                order.save()
+                messages.success(self.request, "Coupon added")
+                return redirect("mainapp:shipping")
+            except ObjectDoesNotExist:
+                messages.info(self.request, "You do not have an active order")
+                return redirect("mainapp:shipping")
 
 
 def About(request):

@@ -12,5 +12,6 @@ urlpatterns = [
     path('summary/', views.OrderSummary.as_view(), name='summary'),
     path('shipping-address/', views.ShippingAddressView.as_view(), name='shipping'),
     path('about/', views.About, name='about'),
+    path('add-coupon/', views.addCouponView.as_view(), name='add-coupon'),
 
 ]
