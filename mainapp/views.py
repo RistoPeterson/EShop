@@ -179,6 +179,18 @@ class addCouponView(View):
                 messages.info(self.request, "You do not have an active order")
                 return redirect("mainapp:shipping")
 
+class PaymentView(View):
+    def get(self, *args, **kwargs):
+        order = Order.objects.get(user=self.request.user, ordered=False)
+        if order.billing_address:
+            context = {
+                'order': order,
+                'display_coupon_form': False
+            }
+            return render(self.request, "payment.html", context)
+        else:
+            messages.warning(self.request, 'Please add your billing address')
+            return redirect("mainapp:shipping")
 
 def About(request):
     return render(request, "about.html")
