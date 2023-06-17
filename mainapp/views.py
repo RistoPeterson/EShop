@@ -21,6 +21,7 @@ def create_order_code():
     return "".join(random.choices(string.ascii_lowercase + string.digits, k=12))
 
 
+
 class IndexView(ListView):
     model = Item
     paginate_by = 8
@@ -233,3 +234,8 @@ class PaymentView(View):
 
 def About(request):
     return render(request, "about.html")
+
+@login_required
+def Profile(request):
+    username = request.user.username
+    return render(request, "profile.html", {'username': username})
