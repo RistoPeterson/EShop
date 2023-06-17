@@ -11,9 +11,13 @@
     <form method="post">
         {% csrf_token %}
         {{signin_form}}
-        <button class="btn btn-info" type="submit">Log in</button>
-         <a href="{% url 'accounts:signup' %}" class="btn btn-info">Register</a>
+        <button class="btn btn-outline-dark mt-auto me-4" type="submit">Log in</button>
     </form>
+    <div class="container mt-5">
+        <p>Don't have an account?
+        <a href="{% url 'accounts:signup' %}" class="btn btn-outline-dark mt-auto me-4">Create new account</a>
+        </p>
+    </div>
 
 </div>
 <br>
