@@ -14,5 +14,6 @@ urlpatterns = [
     path('about/', views.About, name='about'),
     path('add-coupon/', views.addCouponView.as_view(), name='add-coupon'),
     path('payment/', views.PaymentView.as_view(), name='payment'),
+    path('profile/', views.Profile, name='profile'),
 
 ]
