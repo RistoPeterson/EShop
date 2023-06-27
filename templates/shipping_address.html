@@ -10,8 +10,8 @@
         <h4 class="mb-3">Shipping address</h4>
 
         {% if order.billing_address %}
-        <p>You have already added the address! <i><b>{{ order.billing_address.street_address }}</b></i>, do you want to change?</p>
-        <a href="{% url 'mainapp:shipping' %}" class="btn btn-outline-dark mt-auto me-4">Change address</a>
+        <p>You have saved address <i><b>{{ order.billing_address.street_address }}</b></i>, do you want to change?</p>
+        <a href="{% url 'mainapp:profile' %}" class="btn btn-outline-dark mt-auto me-4">Change address</a>
         <a href="{% url 'mainapp:payment' %}" class="btn btn-outline-dark mt-auto me-4">Proceed to checkout</a>
 
         {% else %}

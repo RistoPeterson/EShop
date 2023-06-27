@@ -33,10 +33,11 @@ class ProductDetailView(DetailView):
     template_name = 'product.html'
 
 
-""" Add 1 item if clicked '+' icon """
+
 @login_required
 def add_to_cart(request, slug):
     item = get_object_or_404(Item, slug=slug)
+    # ORM, to get item or create, if not added item
     order_item, created = OrderItem.objects.get_or_create(
         item=item,
         user=request.user,
@@ -47,7 +48,7 @@ def add_to_cart(request, slug):
 
     if order_q.exists():
         order = order_q[0]
-
+        # Add 1 item if clicked '+' icon
         if order.items.filter(item__slug=item.slug).exists():
             order_item.quantity += 1
             order_item.save()
@@ -65,16 +66,13 @@ def add_to_cart(request, slug):
         return redirect("mainapp:summary")
 
 
-"""Remove 1 item if clicked '-' icon"""
 @login_required
 def remove_single_item(request, slug):
     item = get_object_or_404(Item, slug=slug)
-
     order_q = Order.objects.filter(user=request.user, ordered=False)
-
     if order_q.exists():
         order = order_q[0]
-
+        # Remove 1 item if clicked '-' icon
         if order.items.filter(item__slug=item.slug).exists():
             order_item = OrderItem.objects.filter(item=item, user=request.user, ordered=False)[0]
             if order_item.quantity > 1:
@@ -94,15 +92,16 @@ def remove_single_item(request, slug):
         return redirect("mainapp:detail", slug=slug)
 
 
-""" Trash icon function """
 @login_required
 def remove_from_cart(request, slug):
+    # Trash icon function, to delete item line.
     order_item = OrderItem.objects.get(item__slug=slug, user=request.user, ordered=False)
     order_item.delete()
     return redirect('mainapp:summary')
 
 
 class OrderSummary(LoginRequiredMixin, View):
+    # Checks if any items in their cart and renders the template with the order object, if an active order exists.
     def get(self, *args, **kwargs):
         try:
             current_order = Order.objects.get(user=self.request.user, ordered=False)
@@ -118,6 +117,7 @@ class OrderSummary(LoginRequiredMixin, View):
 
 class ShippingAddressView(View):
     def get(self, *args, **kwargs):
+        # Retrieves the current order, initializes a form, and renders the template with the form and order.
         try:
             order = Order.objects.get(user=self.request.user, ordered=False)
             form = ShippingAddressForm()
@@ -133,6 +133,7 @@ class ShippingAddressView(View):
             return redirect('mainapp:summary')
 
     def post(self, *args, **kwargs):
+        # Creates a billing address object
         form = ShippingAddressForm(self.request.POST or None)
         try:
             order = Order.objects.get(user=self.request.user, ordered=False)
@@ -161,6 +162,7 @@ class ShippingAddressView(View):
             return redirect('mainapp:summary')
 
 def get_coupon(request, code):
+    # Handles retrieving a coupon based on a provided code.
     try:
         coupon = Coupon.objects.get(code=code)
         return coupon
@@ -170,6 +172,7 @@ def get_coupon(request, code):
 
 
 class addCouponView(View):
+    # Applies a coupon to an order and handles displaying messages and redirects based on the order's status.
     def post(self, *args, **kwargs):
         form = CouponForm(self.request.POST or None)
         if form.is_valid():
@@ -185,6 +188,7 @@ class addCouponView(View):
                 return redirect("mainapp:shipping")
 
 class PaymentView(View):
+    # Retrieves order, checks billing address, and renders payment or redirects to shipping.
     def get(self, *args, **kwargs):
         order = Order.objects.get(user=self.request.user, ordered=False)
         if order.billing_address:
