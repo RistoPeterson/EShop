@@ -17,8 +17,8 @@ from django.views.generic import View, DetailView, ListView
 
 # stripe.api_key = settings.STRIPE_SECRET_KEY
 """ reference order code """
-def create_order_code():
-    return "".join(random.choices(string.ascii_lowercase + string.digits, k=12))
+# def create_order_code():
+#     return "".join(random.choices(string.ascii_lowercase + string.digits, k=12))
 
 
 
@@ -37,28 +37,34 @@ class ProductDetailView(DetailView):
 @login_required
 def add_to_cart(request, slug):
     item = get_object_or_404(Item, slug=slug)
-    # ORM, to get item or create, if not added item
+
+    # Get or create the order item
     order_item, created = OrderItem.objects.get_or_create(
         item=item,
         user=request.user,
         ordered=False
     )
 
+    # Check if there is an existing order for the user
     order_q = Order.objects.filter(user=request.user, ordered=False)
 
     if order_q.exists():
+        # Retrieve the first order in the queryset
         order = order_q[0]
-        # Add 1 item if clicked '+' icon
+
         if order.items.filter(item__slug=item.slug).exists():
+            # If the item is already in the order, increase the quantity
             order_item.quantity += 1
             order_item.save()
             messages.info(request, "Item is successfully added to cart")
             return redirect("mainapp:summary")
         else:
+            # If the item is not in the order, add it to the order
             messages.info(request, "Item is successfully added to cart")
             order.items.add(order_item)
             return redirect("mainapp:summary")
     else:
+        # If there is no existing order, create a new order
         ordered_date = timezone.now()
         order = Order.objects.create(user=request.user, ordered_date=ordered_date)
         order.items.add(order_item)
@@ -69,12 +75,18 @@ def add_to_cart(request, slug):
 @login_required
 def remove_single_item(request, slug):
     item = get_object_or_404(Item, slug=slug)
+
+    # Check if there is an existing order for the user
     order_q = Order.objects.filter(user=request.user, ordered=False)
+
     if order_q.exists():
+        # Retrieve the first order in the queryset
         order = order_q[0]
-        # Remove 1 item if clicked '-' icon
+
         if order.items.filter(item__slug=item.slug).exists():
+            # If the item is in the order, remove one quantity of the item
             order_item = OrderItem.objects.filter(item=item, user=request.user, ordered=False)[0]
+
             if order_item.quantity > 1:
                 order_item.quantity -= 1
                 order_item.save()
@@ -88,61 +100,80 @@ def remove_single_item(request, slug):
             return redirect("mainapp:detail", slug=slug)
 
     else:
-        messages.info(request, "You dont have an active order")
+        # If there is no existing order, display a message
+        messages.info(request, "You don't have an active order")
         return redirect("mainapp:detail", slug=slug)
 
 
 @login_required
 def remove_from_cart(request, slug):
-    # Trash icon function, to delete item line.
+    # "Trash icon function", to delete order item line.
     order_item = OrderItem.objects.get(item__slug=slug, user=request.user, ordered=False)
     order_item.delete()
     return redirect('mainapp:summary')
 
 
 class OrderSummary(LoginRequiredMixin, View):
-    # Checks if any items in their cart and renders the template with the order object, if an active order exists.
     def get(self, *args, **kwargs):
         try:
+            # Get the current active order for the user
             current_order = Order.objects.get(user=self.request.user, ordered=False)
+
+            # Prepare the context data to be passed to the template
             context = {
                 'object': current_order
             }
+
+            # Render the summary.html template with the context
             return render(self.request, 'summary.html', context)
+
         except ObjectDoesNotExist:
-            messages.warning(self.request, "You don't have any item in the cart")
+            # If no active order exists, display a warning message and redirect
+            messages.warning(self.request, "You don't have any items in the cart")
             return redirect('/')
-        return render(self.request, 'summary.html')
 
 
 class ShippingAddressView(View):
     def get(self, *args, **kwargs):
-        # Retrieves the current order, initializes a form, and renders the template with the form and order.
         try:
+            # Get the current active order for the user
             order = Order.objects.get(user=self.request.user, ordered=False)
+
+            # Initialize the shipping address form
             form = ShippingAddressForm()
+
+            # Prepare the context data to be passed to the template
             context = {
                 'form': form,
                 'order': order,
                 'couponform': CouponForm(),
                 'display_coupon_form': True,
             }
+
+            # Render the shipping_address.html template with the context
             return render(self.request, 'shipping_address.html', context)
+
         except ObjectDoesNotExist:
+            # If no active order exists, display a warning message and redirect to the order summary page
             messages.warning(self.request, 'You do not have an active order.')
             return redirect('mainapp:summary')
 
     def post(self, *args, **kwargs):
-        # Creates a billing address object
+        # Process the form submission for creating a billing address
         form = ShippingAddressForm(self.request.POST or None)
+
         try:
+            # Get the current active order for the user
             order = Order.objects.get(user=self.request.user, ordered=False)
+
             if form.is_valid():
+                # Extract the form data
                 street_address = form.cleaned_data.get('street_address')
                 apartment_address = form.cleaned_data.get('apartment_address')
                 country = form.cleaned_data.get('country')
                 zip_code = form.cleaned_data.get('zip_code')
 
+                # Create a new billing address object
                 billing_address = BillingAddress(
                     user=self.request.user,
                     street_address=street_address,
@@ -152,12 +183,16 @@ class ShippingAddressView(View):
                 )
 
                 billing_address.save()
+
+                # Assign the billing address to the order
                 order.billing_address = billing_address
                 order.save()
 
                 messages.info(self.request, 'Address added to order.')
                 return redirect('mainapp:summary')
+
         except ObjectDoesNotExist:
+            # If no active order exists, display a warning message and redirect to the order summary page
             messages.info(self.request, 'You do not have an active order.')
             return redirect('mainapp:summary')
 
