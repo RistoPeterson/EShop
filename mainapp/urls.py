@@ -4,7 +4,8 @@ from . import views
 app_name = 'mainapp'
 
 urlpatterns = [
-    path('', views.IndexView.as_view(), name='index'),
+    path('', views.HomeView, name='index'),
+    path('all-products', views.IndexView.as_view(), name='all_products'),
     path('product/<slug>/', views.ProductDetailView.as_view(), name='product'),
     path('add-to-cart/<slug>/', views.add_to_cart, name='add-to-cart'),
     path('remove-single-item/<slug>/', views.remove_single_item, name='remove-single-item'),

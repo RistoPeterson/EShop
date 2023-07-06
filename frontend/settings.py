@@ -128,4 +128,5 @@ MEDIA_ROOT = (
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-# STRIPE_SECRET_KEY = "" # The code comes from stripe account
+# The code comes from stripe account
+STRIPE_SECRET_KEY = "pk_test_51NJs9aIVGX7SGmU5D2yrac3s4Ge2n7z62MbVOYQLaRdTlAXghlHqg25sKoaKylVKRi4XGxynIvBpmNlFFDXQyDyV005ezIwu3M"

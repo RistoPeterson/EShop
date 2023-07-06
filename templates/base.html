@@ -28,7 +28,7 @@
                         <li class="nav-item dropdown">
                             <a class="nav-link dropdown-toggle" id="navbarDropdown" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">Shop</a>
                             <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-                                <li><a class="dropdown-item" href="#!">All Products</a></li>
+                                <li><a class="dropdown-item" href="{% url 'mainapp:all_products' %}">All Products</a></li>
                                 <li><hr class="dropdown-divider" /></li>
                                 <li><a class="dropdown-item" href="#!">Popular Items</a></li>
                                 <li><a class="dropdown-item" href="#!">New Arrivals</a></li>
@@ -84,25 +84,17 @@
         {% block content %}
 
         {% endblock %}
-        <!-- Header-->
-        <header class="bg-dark py-5">
-            <div class="container px-4 px-lg-5 my-5">
-                <div class="text-center text-white">
-                    <h1 class="display-4 fw-bolder">Shop in style</h1>
-                    <p class="lead fw-normal text-white-50 mb-0">With this shop homepage template</p>
-                </div>
-            </div>
-        </header>
-
-
-        <!-- Footer-->
+        <!-- footer -->
         <footer class="py-5 bg-dark">
-            <div class="container"><p class="m-0 text-center text-white">Copyright &copy; Your Website 2023</p></div>
+            <div class="container">
+              <p class="m-0 text-center text-white">Copyright &copy; Your Website 2023</p>
+            </div>
         </footer>
-        <!-- Bootstrap core JS-->
-        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
-        <!-- Core theme JS-->
-        <!-- <script src="js/scripts.js"></script> -->
+
+            <!-- Bootstrap core JS-->
+            <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
+            <!-- Core theme JS-->
+            <!-- <script src="js/scripts.js"></script> -->
 
     {% block more_scripts %}
     {% endblock more_scripts %}
