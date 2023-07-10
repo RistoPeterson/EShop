@@ -5,6 +5,16 @@
 
 {% block content %}
 
+<head>
+  <style>
+    body {
+      background-image: url("../uploads/photo2.jpg");
+      background-repeat: no-repeat;
+      background-size: cover;
+    }
+  </style>
+</head>
+
 <div class="container mb-5">
   <div class="row">
     <div class="col-md-6">
@@ -65,7 +75,7 @@
         </div>
         <div class="col-md-4 mb-5 text-center mt-5">
            <p><em><b>If you want to be a part of our story, you are welcome to familiarize yourself with our selection</b></em></p>
-            <a class="btn btn-outline-dark mt-5 me-4" href="{% url 'mainapp:index' %}">Go to shop</a>
+            <a class="btn btn-outline-dark mt-5 me-4" href="{% url 'mainapp:all_products' %}">Go to shop</a>
         </div>
         <div class="col-md-4 mt-5">
             <img src="../uploads/cubes (1).png" alt="Cube" class="img-fluid float-end " width="150px" height="150px">
