@@ -17,21 +17,21 @@ from django.views.generic import View, DetailView, ListView
 
 # stripe.api_key = settings.STRIPE_SECRET_KEY
 """ reference order code """
+
+
 # def create_order_code():
 #     return "".join(random.choices(string.ascii_lowercase + string.digits, k=12))
-
 
 
 class IndexView(ListView):
     model = Item
     paginate_by = 8
-    template_name = 'index.html'
+    template_name = 'all_products.html'
 
 
 class ProductDetailView(DetailView):
     model = Item
     template_name = 'product.html'
-
 
 
 @login_required
@@ -196,6 +196,7 @@ class ShippingAddressView(View):
             messages.info(self.request, 'You do not have an active order.')
             return redirect('mainapp:summary')
 
+
 def get_coupon(request, code):
     # Handles retrieving a coupon based on a provided code.
     try:
@@ -222,6 +223,7 @@ class addCouponView(View):
                 messages.info(self.request, "You do not have an active order")
                 return redirect("mainapp:shipping")
 
+
 class PaymentView(View):
     # Retrieves order, checks billing address, and renders payment or redirects to shipping.
     def get(self, *args, **kwargs):
@@ -236,43 +238,50 @@ class PaymentView(View):
             messages.warning(self.request, 'Please add your billing address')
             return redirect("mainapp:shipping")
 
-""" Creditcard stripe functions """
-    # def post(self, *args, **kwargs):
-    #     order = Order.objects.get(user=self.request.user, ordered=False)
-    #     token = self.request.POST.get("stripeToken")
-    #     amount = int(order.total_price() * 100)
-    #
-    #     try:
-    #         charge = stripe.charge.create(
-    #            amount = amount,
-    #             currency = "eur",
-    #             source = token,
-    #             description = "Payment from Print3DStuff"
-    #         )
-    #         payment = Payment()
-    #         payment.stripe_charge_id = charge["id"]
-    #         payment.user = self.request.user
-    #         payment.amount = order.total_price()
-    #         payment.save()
-    #
-#           """ If order success, cart template will show "0" """
-    #         order_items = order.items.all()
-    #         order_items.update(ordered=True)
-    #         for item in order_items:
-    #           item.payment = payment
-    #
-    #         order.order_ref = create_order_code()
-    #         order.save()
-    #
-    #         messages.success(self.request, "Order successful")
-    #         return redirect('/')
-    #
-    #     """ HERE COME COPY-PASTE FROM STRIPE INFO """
 
+""" Creditcard stripe functions """
+
+
+# def post(self, *args, **kwargs):
+#     order = Order.objects.get(user=self.request.user, ordered=False)
+#     token = self.request.POST.get("stripeToken")
+#     amount = int(order.total_price() * 100)
+#
+#     try:
+#         charge = stripe.charge.create(
+#            amount = amount,
+#             currency = "eur",
+#             source = token,
+#             description = "Payment from Print3DStuff"
+#         )
+#         payment = Payment()
+#         payment.stripe_charge_id = charge["id"]
+#         payment.user = self.request.user
+#         payment.amount = order.total_price()
+#         payment.save()
+#
+#           """ If order success, cart template will show "0" """
+#         order_items = order.items.all()
+#         order_items.update(ordered=True)
+#         for item in order_items:
+#           item.payment = payment
+#
+#         order.order_ref = create_order_code()
+#         order.save()
+#
+#         messages.success(self.request, "Order successful")
+#         return redirect('/')
+#
+#     """ HERE COME COPY-PASTE FROM STRIPE INFO """
 
 
 def About(request):
     return render(request, "about.html")
+
+
+def HomeView(request):
+    return render(request, "index.html")
+
 
 @login_required
 def Profile(request):
