@@ -29,6 +29,26 @@ class IndexView(ListView):
     template_name = 'all_products.html'
 
 
+class PopView(ListView):
+    model = Item
+    paginate_by = 8
+    template_name = 'popular_products.html'
+
+
+class NewArrivals(ListView):
+    model = Item
+    paginate_by = 8
+    template_name = 'new_arrivals.html'
+
+
+def products_view(request):
+    popular_items = Order.objects.filter(ordered=True).order_by('-title')
+    context = {
+        'popular_items': popular_items,
+    }
+    return render(request, 'popular_products.html', context)
+
+
 class ProductDetailView(DetailView):
     model = Item
     template_name = 'product.html'
